@@ -17,7 +17,11 @@ import {
 	SidebarMenuSubItem,
 	SidebarRail,
 } from "@/components/ui/sidebar";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 
 const data = {
@@ -30,6 +34,11 @@ const data = {
 				{ title: "Customer", url: "/sales/customer" },
 				{ title: "Invoices", url: "/sales/invoices" },
 			],
+		},
+		{
+			title: "GST Reconcillation",
+			url: "/gst-reconcillation",
+			items: [],
 		},
 		{
 			title: "Expenses",
@@ -114,8 +123,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								<Collapsible
 									key={item.title}
 									open={isOpen}
-									onOpenChange={(open) => setOpenSection(open ? item.title : null)}
-								>
+									onOpenChange={(open) =>
+										setOpenSection(open ? item.title : null)
+									}>
 									<SidebarMenuItem key={item.title}>
 										<CollapsibleTrigger asChild>
 											<SidebarMenuButton className="font-medium">
@@ -134,8 +144,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 													<SidebarMenuSubItem key={sub.title}>
 														<SidebarMenuSubButton
 															asChild
-															isActive={pathname === sub.url}
-														>
+															isActive={pathname === sub.url}>
 															<a href={sub.url}>{sub.title}</a>
 														</SidebarMenuSubButton>
 													</SidebarMenuSubItem>

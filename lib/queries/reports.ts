@@ -290,6 +290,84 @@ async function fetchCashFlow(body: CashFlowBody): Promise<CashFlowData> {
 }
 
 // ──────────────────────────────────────────────
+// GST Reconciliation
+// ──────────────────────────────────────────────
+
+export type GstReconciliationSummary = {
+	gstr2bItc: number;
+	booksItc: number;
+	difference: number;
+	matchedCount: number;
+	missingInBooksCount: number;
+	missingInGstr2bCount: number;
+};
+
+export type GstReconciliationMatchedRow = {
+	gstin: string;
+	invoiceNumber: string;
+	invoiceDate: string;
+	gstr2b: {
+		taxableValue: number;
+		cgst?: number;
+		sgst?: number;
+		igst?: number;
+		[key: string]: unknown;
+	};
+	books?: {
+		journalReferences?: string[];
+		itcAmount?: number;
+		[key: string]: unknown;
+	};
+	[key: string]: unknown;
+};
+
+export type GstReconciliationBuckets = {
+	matched: GstReconciliationMatchedRow[];
+	amountMismatch: GstReconciliationMatchedRow[];
+	dateMismatch: GstReconciliationMatchedRow[];
+	missingInBooks: GstReconciliationMatchedRow[];
+	missingInGstr2b: GstReconciliationMatchedRow[];
+};
+
+export type GstReconciliationData = {
+	period: { from: string; to: string };
+	summary: GstReconciliationSummary;
+	buckets: GstReconciliationBuckets;
+};
+
+export type GstReconciliationBody = {
+	file: File;
+	periodFrom: string;
+	periodTo: string;
+	matchOn?: string[];
+	toleranceAmount?: number;
+	toleranceDateDays?: number;
+};
+
+async function fetchGstReconciliation(
+	body: GstReconciliationBody,
+): Promise<GstReconciliationData> {
+	const formData = new FormData();
+	formData.append("file", body.file);
+	formData.append("periodFrom", body.periodFrom);
+	formData.append("periodTo", body.periodTo);
+	if (body.matchOn && body.matchOn.length) {
+		formData.append("matchOn", JSON.stringify(body.matchOn));
+	}
+	if (typeof body.toleranceAmount === "number") {
+		formData.append("toleranceAmount", String(body.toleranceAmount));
+	}
+	if (typeof body.toleranceDateDays === "number") {
+		formData.append("toleranceDateDays", String(body.toleranceDateDays));
+	}
+
+	const { data } = await api.post(`${BASE}/gst-reconciliation`, formData, {
+		headers: { "Content-Type": "multipart/form-data" },
+	});
+	return unwrap<GstReconciliationData>(data);
+}
+
+// ──────────────────────────────────────────────
 // Query keys
 // ──────────────────────────────────────────────
 
@@ -307,6 +385,7 @@ export const reportKeys = {
 		[...reportKeys.all, "net-income", params] as const,
 	profitLoss: (body: PnLBody) => [...reportKeys.all, "profit-loss", body] as const,
 	cashFlow: (body: CashFlowBody) => [...reportKeys.all, "cash-flow", body] as const,
+	gstReconciliation: () => [...reportKeys.all, "gst-reconciliation"] as const,
 };
 
 // ──────────────────────────────────────────────
@@ -366,6 +445,16 @@ export function useCashFlowMutation() {
 		mutationFn: fetchCashFlow,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: reportKeys.all });
+		},
+	});
+}
+
+export function useGstReconciliationMutation() {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: fetchGstReconciliation,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: reportKeys.gstReconciliation() });
 		},
 	});
 }
