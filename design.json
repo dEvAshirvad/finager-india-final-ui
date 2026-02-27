@@ -1,0 +1,497 @@
+{
+	"designSystem": {
+		"meta": {
+			"name": "Apex Finance Design System",
+			"category": "SaaS / FinTech Dashboard",
+			"style": "Modern Clean B2B SaaS",
+			"tone": "Professional, trustworthy, minimal yet data-rich",
+			"description": "A clean, corporate-grade financial SaaS design system. Light backgrounds with high-contrast text, strong blue as primary action color, and structured two-column hero layouts pairing marketing copy with live product screenshots."
+		},
+
+		"colorPalette": {
+			"primary": {
+				"brand": "#3B5BDB",
+				"brandHover": "#2F4AC2",
+				"brandLight": "#EEF2FF"
+			},
+			"neutral": {
+				"background": "#FFFFFF",
+				"surfaceCard": "#F8F9FA",
+				"surfaceDark": "#1A1A2E",
+				"border": "#E9ECEF",
+				"borderSubtle": "#F1F3F5"
+			},
+			"text": {
+				"primary": "#0D0D0D",
+				"secondary": "#6B7280",
+				"tertiary": "#9CA3AF",
+				"inverse": "#FFFFFF",
+				"link": "#3B5BDB"
+			},
+			"semantic": {
+				"success": "#22C55E",
+				"successLight": "#DCFCE7",
+				"danger": "#EF4444",
+				"dangerLight": "#FEE2E2",
+				"warning": "#F59E0B",
+				"info": "#3B82F6"
+			},
+			"chart": {
+				"bar1": "#3B5BDB",
+				"bar2": "#93C5FD",
+				"bar3": "#C4B5FD",
+				"line": "#22C55E"
+			}
+		},
+
+		"typography": {
+			"fontFamilies": {
+				"display": "'Inter', 'SF Pro Display', sans-serif",
+				"body": "'Inter', 'SF Pro Text', sans-serif",
+				"mono": "'JetBrains Mono', 'Fira Code', monospace"
+			},
+			"scale": {
+				"hero": {
+					"size": "48-56px",
+					"weight": 700,
+					"lineHeight": 1.1,
+					"letterSpacing": "-0.03em"
+				},
+				"h1": {
+					"size": "36-40px",
+					"weight": 700,
+					"lineHeight": 1.15,
+					"letterSpacing": "-0.02em"
+				},
+				"h2": {
+					"size": "24-28px",
+					"weight": 600,
+					"lineHeight": 1.25,
+					"letterSpacing": "-0.01em"
+				},
+				"h3": { "size": "18-20px", "weight": 600, "lineHeight": 1.3 },
+				"bodyLarge": { "size": "16-18px", "weight": 400, "lineHeight": 1.6 },
+				"body": { "size": "14-15px", "weight": 400, "lineHeight": 1.5 },
+				"small": { "size": "12-13px", "weight": 400, "lineHeight": 1.4 },
+				"label": {
+					"size": "11-12px",
+					"weight": 500,
+					"lineHeight": 1.4,
+					"letterSpacing": "0.04em",
+					"textTransform": "uppercase"
+				},
+				"badge": {
+					"size": "11px",
+					"weight": 600,
+					"lineHeight": 1,
+					"letterSpacing": "0.02em"
+				}
+			}
+		},
+
+		"spacing": {
+			"unit": 4,
+			"scale": {
+				"xs": "4px",
+				"sm": "8px",
+				"md": "12px",
+				"lg": "16px",
+				"xl": "24px",
+				"2xl": "32px",
+				"3xl": "48px",
+				"4xl": "64px",
+				"5xl": "96px"
+			},
+			"containerMaxWidth": "1280px",
+			"containerPadding": "24-48px",
+			"sectionPadding": "80-120px vertical"
+		},
+
+		"borderRadius": {
+			"none": "0px",
+			"sm": "4px",
+			"md": "8px",
+			"lg": "12px",
+			"xl": "16px",
+			"2xl": "20px",
+			"full": "9999px",
+			"card": "12px",
+			"modal": "16px",
+			"badge": "6px",
+			"button": "8px"
+		},
+
+		"shadows": {
+			"none": "none",
+			"sm": "0 1px 2px rgba(0,0,0,0.05)",
+			"md": "0 4px 12px rgba(0,0,0,0.08)",
+			"lg": "0 8px 32px rgba(0,0,0,0.12)",
+			"xl": "0 16px 48px rgba(0,0,0,0.16)",
+			"card": "0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+			"productMockup": "0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08)",
+			"focus": "0 0 0 3px rgba(59,91,219,0.25)"
+		},
+
+		"components": {
+			"navbar": {
+				"height": "64px",
+				"background": "#FFFFFF",
+				"borderBottom": "1px solid #E9ECEF",
+				"position": "sticky top-0",
+				"zIndex": 100,
+				"padding": "0 48px",
+				"structure": {
+					"left": "logo + primary nav links",
+					"center": "none",
+					"right": "secondary links + CTA button"
+				},
+				"logoSize": "32px icon + wordmark",
+				"navLink": {
+					"fontSize": "14px",
+					"fontWeight": 500,
+					"color": "#374151",
+					"gap": "32px between items"
+				},
+				"badge": {
+					"text": "New",
+					"background": "#EEF2FF",
+					"color": "#3B5BDB",
+					"borderRadius": "4px",
+					"padding": "2px 6px",
+					"fontSize": "11px",
+					"fontWeight": 600
+				},
+				"announcementBar": {
+					"background": "#F8F9FA",
+					"borderBottom": "1px solid #E9ECEF",
+					"height": "36px",
+					"textAlign": "center",
+					"fontSize": "13px",
+					"badgeStyle": "inline pill with brand color"
+				}
+			},
+
+			"buttons": {
+				"primary": {
+					"background": "#3B5BDB",
+					"color": "#FFFFFF",
+					"borderRadius": "8px",
+					"padding": "10px 20px",
+					"fontSize": "14px",
+					"fontWeight": 600,
+					"border": "none",
+					"hoverBackground": "#2F4AC2",
+					"iconPosition": "right (arrow or external link icon)",
+					"boxShadow": "0 1px 2px rgba(0,0,0,0.1)"
+				},
+				"secondary": {
+					"background": "transparent",
+					"color": "#374151",
+					"border": "1px solid #D1D5DB",
+					"borderRadius": "8px",
+					"padding": "10px 20px",
+					"fontSize": "14px",
+					"fontWeight": 500,
+					"hoverBackground": "#F9FAFB"
+				},
+				"ghost": {
+					"background": "transparent",
+					"color": "#3B5BDB",
+					"border": "none",
+					"padding": "8px 12px",
+					"fontSize": "14px",
+					"fontWeight": 500
+				}
+			},
+
+			"heroSection": {
+				"layout": "two-column: 50% copy / 50% product mockup",
+				"verticalAlignment": "center",
+				"copyColumn": {
+					"eyebrow": {
+						"style": "small badge/pill label above headline",
+						"background": "#EEF2FF",
+						"color": "#3B5BDB",
+						"borderRadius": "6px",
+						"padding": "4px 10px",
+						"fontSize": "12px",
+						"fontWeight": 600,
+						"iconLeft": "optional dot or sparkle"
+					},
+					"headline": {
+						"maxWidth": "480px",
+						"fontSize": "48-56px",
+						"fontWeight": 700,
+						"color": "#0D0D0D",
+						"lineHeight": 1.1,
+						"letterSpacing": "-0.03em",
+						"style": "2-3 line punchy statement"
+					},
+					"subheadline": {
+						"maxWidth": "440px",
+						"fontSize": "16-18px",
+						"fontWeight": 400,
+						"color": "#6B7280",
+						"lineHeight": 1.6,
+						"marginTop": "16px"
+					},
+					"ctaGroup": {
+						"marginTop": "32px",
+						"direction": "row",
+						"gap": "12px",
+						"primaryCTA": "filled blue button with icon",
+						"secondaryCTA": "ghost/outline button"
+					}
+				},
+				"mockupColumn": {
+					"style": "browser chrome window screenshot of the product",
+					"browserChrome": {
+						"background": "#F1F3F5",
+						"dotColors": ["#FF5F57", "#FFBD2E", "#28CA41"],
+						"urlBar": "rounded, white background, lock icon + URL text",
+						"borderRadius": "10px 10px 0 0"
+					},
+					"contentArea": {
+						"background": "#FFFFFF",
+						"overflow": "hidden",
+						"borderRadius": "0 0 10px 10px",
+						"border": "1px solid #E9ECEF"
+					},
+					"positioning": "slight right overflow or floating for visual depth",
+					"shadow": "0 20px 60px rgba(0,0,0,0.15)"
+				}
+			},
+
+			"dashboard": {
+				"layout": "sidebar + main content",
+				"sidebar": {
+					"width": "220px",
+					"background": "#FFFFFF",
+					"borderRight": "1px solid #E9ECEF",
+					"padding": "16px 12px",
+					"sections": [
+						"workspace switcher at top",
+						"nav groups with labels",
+						"settings at bottom"
+					],
+					"navItem": {
+						"height": "36px",
+						"borderRadius": "6px",
+						"activeBackground": "#EEF2FF",
+						"activeColor": "#3B5BDB",
+						"activeFontWeight": 600,
+						"defaultColor": "#6B7280",
+						"defaultFontWeight": 400,
+						"fontSize": "13-14px",
+						"iconSize": "16px",
+						"iconColor": "matches text color",
+						"gap": "8px between icon and label"
+					},
+					"sectionLabel": {
+						"fontSize": "10-11px",
+						"fontWeight": 600,
+						"color": "#9CA3AF",
+						"textTransform": "uppercase",
+						"letterSpacing": "0.08em",
+						"marginBottom": "4px",
+						"marginTop": "16px"
+					}
+				},
+				"mainContent": {
+					"padding": "24-32px",
+					"background": "#F8F9FA",
+					"topBar": {
+						"height": "56px",
+						"background": "#FFFFFF",
+						"borderBottom": "1px solid #E9ECEF",
+						"content": "page title left, search + icons right"
+					}
+				}
+			},
+
+			"cards": {
+				"base": {
+					"background": "#FFFFFF",
+					"border": "1px solid #E9ECEF",
+					"borderRadius": "12px",
+					"padding": "20-24px",
+					"boxShadow": "0 2px 8px rgba(0,0,0,0.06)"
+				},
+				"metric": {
+					"structure": "label + large number + trend badge",
+					"labelStyle": "12px, #9CA3AF, uppercase",
+					"valueStyle": "28-36px, bold, #0D0D0D",
+					"trendBadge": {
+						"positive": {
+							"background": "#DCFCE7",
+							"color": "#16A34A",
+							"prefix": "+",
+							"suffix": "%"
+						},
+						"negative": {
+							"background": "#FEE2E2",
+							"color": "#DC2626",
+							"suffix": "%"
+						},
+						"borderRadius": "4px",
+						"padding": "2px 6px",
+						"fontSize": "12px",
+						"fontWeight": 600
+					}
+				},
+				"creditCard": {
+					"aspectRatio": "1.586",
+					"borderRadius": "12px",
+					"gradient": "subtle dark gradient or solid brand color",
+					"layout": "card type top right, balance center, card number + expiry bottom",
+					"tabSwitcher": {
+						"style": "pill tabs: Virtual | Physical",
+						"activeTab": "white background with shadow",
+						"inactiveTab": "transparent"
+					}
+				}
+			},
+
+			"charts": {
+				"barChart": {
+					"style": "grouped bars, rounded tops",
+					"colors": ["#3B5BDB", "#93C5FD", "#C4B5FD"],
+					"gridLines": "horizontal only, very subtle #F1F3F5",
+					"xAxis": "month abbreviations, 12px, #9CA3AF",
+					"yAxis": "none or hidden",
+					"legend": "inline dots above chart",
+					"barGap": "2-4px",
+					"cornerRadius": "3px on top corners"
+				},
+				"legend": {
+					"dotSize": "8px circle",
+					"fontSize": "12px",
+					"color": "#6B7280",
+					"gap": "16px between items"
+				}
+			},
+
+			"badges": {
+				"new": {
+					"text": "NEW",
+					"background": "#EEF2FF",
+					"color": "#3B5BDB",
+					"borderRadius": "4px",
+					"padding": "3px 8px",
+					"fontSize": "11px",
+					"fontWeight": 700
+				},
+				"status": {
+					"active": {
+						"background": "#DCFCE7",
+						"color": "#16A34A",
+						"dot": "#22C55E"
+					},
+					"inactive": { "background": "#F3F4F6", "color": "#6B7280" }
+				}
+			},
+
+			"logoStrip": {
+				"layout": "horizontal scrolling row of partner/client logos",
+				"background": "#FFFFFF",
+				"borderTop": "1px solid #E9ECEF",
+				"borderBottom": "1px solid #E9ECEF",
+				"padding": "24px 0",
+				"logoStyle": "monochrome, grayscale at 50% opacity",
+				"logoHeight": "20-28px",
+				"gap": "48-64px between logos",
+				"superscript": "™ trademark symbol, 60% opacity"
+			}
+		},
+
+		"layoutPatterns": {
+			"heroWithMockup": {
+				"description": "Split layout with copy left, browser mockup right",
+				"copyWidth": "45-50%",
+				"mockupWidth": "50-55%",
+				"mockupOverflow": "allow slight bleed past container",
+				"verticalCenter": true,
+				"minHeight": "80vh"
+			},
+			"dashboardTwoPanel": {
+				"description": "Card grid left, chart/overview right",
+				"leftWidth": "40%",
+				"rightWidth": "60%",
+				"gap": "24px"
+			},
+			"cardGrid": {
+				"columns": "repeat(auto-fill, minmax(280px, 1fr))",
+				"gap": "16-24px"
+			}
+		},
+
+		"motion": {
+			"easing": {
+				"default": "cubic-bezier(0.4, 0, 0.2, 1)",
+				"enter": "cubic-bezier(0, 0, 0.2, 1)",
+				"exit": "cubic-bezier(0.4, 0, 1, 1)",
+				"spring": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+			},
+			"duration": {
+				"instant": "80ms",
+				"fast": "150ms",
+				"normal": "250ms",
+				"slow": "400ms",
+				"enter": "300ms",
+				"exit": "200ms"
+			},
+			"interactions": {
+				"buttonHover": "background-color 150ms ease, transform 100ms ease",
+				"cardHover": "box-shadow 200ms ease, transform 200ms ease",
+				"navItem": "background-color 100ms ease",
+				"pageLoad": "fade-in + slide-up staggered per section"
+			}
+		},
+
+		"iconography": {
+			"library": "Lucide Icons or similar stroke-based library",
+			"style": "2px stroke, rounded corners",
+			"sizes": {
+				"sm": "14px",
+				"md": "16px",
+				"lg": "20px",
+				"xl": "24px"
+			},
+			"color": "inherits from parent text color or explicit neutral"
+		},
+
+		"designPrinciples": [
+			"Clean white surfaces with subtle borders — no heavy drop shadows or dark modes by default",
+			"Blue (#3B5BDB) is the single action color — used sparingly and intentionally",
+			"Typography does the heavy lifting — large, bold headlines with tight tracking create hierarchy",
+			"Product mockups as hero visuals — show the actual UI inside browser chrome for credibility",
+			"Data density is a feature — pack meaningful numbers and charts without feeling cluttered",
+			"Micro-labels and badges provide context without taking space",
+			"Consistent 8px base grid with 4px increments for tight spacing",
+			"Sidebar navigation with labeled groups creates clear information architecture",
+			"Status indicators (green dot = active) provide at-a-glance system state",
+			"Trend badges (green/red %) on metrics make change instantly scannable"
+		],
+
+		"doAndDont": {
+			"do": [
+				"Use Inter or a similarly clean geometric sans-serif",
+				"Keep white space generous in the marketing sections",
+				"Use subtle #F8F9FA backgrounds for dashboard content areas",
+				"Pair primary CTA (filled blue) with secondary CTA (ghost/outline) in every hero",
+				"Add +% / -% trend chips next to every key metric",
+				"Use browser chrome wrapper for product screenshots to add context and polish",
+				"Label sidebar nav sections with small uppercase category headers",
+				"Keep charts minimal: remove y-axis, keep x-axis labels light gray"
+			],
+			"dont": [
+				"Don't use purple gradients or dark hero backgrounds — this system is light-mode first",
+				"Don't use more than 2 typeface weights on the same element",
+				"Don't make cards borderless — a 1px #E9ECEF border is always present",
+				"Don't use icon-only navigation without labels in sidebar",
+				"Don't mix colored backgrounds in the hero section — keep it white/light",
+				"Don't use animations heavier than fade + translate-Y on page sections"
+			]
+		}
+	}
+}

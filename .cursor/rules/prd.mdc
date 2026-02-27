@@ -1,0 +1,44 @@
+---
+description: Core Product Requirements (PRD) for the Finager India B2B SaaS product
+alwaysApply: true
+---
+
+# Product Requirements (PRD) — Finager India
+
+Purpose
+- Single workspace for CA firms to manage multiple client businesses: GST filings (GSTR-1, GSTR-2B, reconciliation), accounting reports (P&L, Balance Sheet, Trial Balance), and audit workflows (Form 3CD, checklists).
+
+Primary users
+- Chartered Accountant firms (multi-user workspaces) and their client businesses (upload documents, view reports, approve filings).
+
+Core flows (high level)
+- Workspace & firm setup: firm creates workspace, invites team members and clients.
+- Client onboarding: client account creation, secure document upload, basic KYC metadata.
+- Accounting intake: import/Journals/upload CSV / integrate with ledgers; generate Trial Balance, P&L, Balance Sheet.
+- GST lifecycle: collect invoices → auto-match → produce GSTR-1 / compare GSTR-2B → reconciliation reports → filing workflow with CA approval.
+- Audit workflows: generate Form 3CD checklist, attach evidence, track reviewer comments and signoffs.
+
+Non-functional requirements
+- Data privacy: client data separation per workspace, encrypted at rest and in transit.
+- Performance: dashboard loads < 400ms for typical firm with 100 clients (target).
+- Compliance: follow Indian GST and audit record retention rules.
+
+Success metrics
+- Time-to-file reduction for CA firms (target 30% faster).
+- Adoption: % of invited clients who upload documents within 7 days.
+- Accuracy: % reduction in reconciliation exceptions after automated matching.
+
+Constraints & integrations
+- Integrate with common accounting exports (Tally/CSV), GST APIs or file formats, OAuth for identity providers.
+- Multi-tenant data model: strict workspace boundaries; role-based access control.
+
+Release & priorities (initial MVP)
+1. Firm workspace, user management, client accounts, document upload.
+2. Basic accounting reports (Trial Balance, P&L).
+3. GSTR-1 generation and GSTR-2B reconciliation reports.
+4. Filing workflow and client approval flows.
+5. Audit checklist (Form 3CD) generator and evidence attachments.
+
+How to use this rule
+- This rule is always applied to conversations in the project to guide product decisions, acceptance criteria, and scope discussions. Keep it concise and refer back when making trade-offs.
+

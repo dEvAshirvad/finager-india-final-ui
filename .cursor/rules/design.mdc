@@ -1,0 +1,40 @@
+---
+description: Design system and UI rules derived from design.json (colors, typography, spacing, component patterns)
+alwaysApply: true
+---
+
+# Design.md — Design system rules (apply to all work)
+
+Source of truth
+- `design.json` at the repository root contains the canonical tokens for colors, typography, spacing, radii, and component patterns. Always reference `design.json` when making UI decisions.
+
+Color & tokens
+- Primary brand: `#3B5BDB` (use for CTAs, links, active states).
+- Background surfaces: `--background: #FFFFFF`; dashboard content area: `--card: #F8F9FA`.
+- Borders: `#E9ECEF` (1px) on cards and navigation separators.
+- Semantic colors: success `#22C55E`, danger `#EF4444`, warning `#F59E0B`, info `#3B82F6`.
+
+Typography
+- Use Inter (or equivalent) for display and body. Headline scale: hero 48–56px, h1 36–40px, h2 24–28px, body 14–16px. Prefer 2 weight choices per element.
+
+Spacing & layout
+- Base 8px grid with 4px increments (unit=4). Container max width 1280px; section padding 80–120px vertical for marketing pages.
+
+Components & patterns
+- Marketing hero: Dark gradient mesh background for marketing/landing, two-column copy + mockup layout, primary CTA + ghost CTA.
+- Dashboard: Light surfaces, white cards with 1px `#E9ECEF` border, sidebar + main content layout, sidebar active state uses `--primary-100` (#EEF2FF) background and `--primary` (#3B5BDB) text.
+- Buttons: Primary filled `--primary` with 8px radius; Secondary outline uses `#D1D5DB` border and neutral text.
+- Charts: use the chart palette in `design.json` and keep y-axis minimal or hidden.
+
+Do & Don't
+- DO use white surfaces with subtle borders in the dashboard; DO use the brand blue sparingly as action color.
+- DON'T use dark hero backgrounds on the dashboard (marketing only); DON'T use more than 2 type weights on the same element.
+
+Implementation notes
+- Update `app/globals.css` CSS variables to match `design.json` tokens and keep `.dark` overrides curated separately for dark-mode surfaces.
+- Expose CSS variables to Tailwind via `tailwind.config.ts` so utility classes map to tokens (e.g., `bg-primary -> var(--primary)`).
+- Keep component classes composable (use `cn` function) and prefer shadcn/ui components where available.
+
+How to use this rule
+- This rule is always applied. When authoring UI, reference these tokens and the do/don't list. For new components, add a short entry to this rule or create a focused `.cursor/rules/*.mdc` rule.
+
