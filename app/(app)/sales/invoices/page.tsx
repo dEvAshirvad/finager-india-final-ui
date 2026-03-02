@@ -135,12 +135,12 @@ type ItemRow = {
 };
 
 type InvoiceFormValues = {
-	reference: string;
 	date: string;
 	contactId: string;
 	paymentMode: PaymentMode;
 	placeOfSupply: string;
-	paymentDue: string;
+	/** When payment is due (for CREDIT). */
+	dueDate: string;
 	items: ItemRow[];
 	// Payment at create (CASH/ONLINE)
 	payAmount: string;
@@ -168,12 +168,11 @@ function InvoiceFormSheet({
 
 	const form = useForm<InvoiceFormValues>({
 		defaultValues: {
-			reference: "",
 			date: new Date().toISOString().slice(0, 10),
 			contactId: "",
 			paymentMode: "CREDIT",
 			placeOfSupply: "",
-			paymentDue: "",
+			dueDate: "",
 			items: [
 				{ productId: "", qty: "1", rate: "", discount: "0", gstRate: "12" },
 			],
@@ -192,12 +191,11 @@ function InvoiceFormSheet({
 	useEffect(() => {
 		if (editInvoice) {
 			form.reset({
-				reference: editInvoice.reference,
 				date: editInvoice.date.slice(0, 10),
 				contactId: editInvoice.contactId,
 				paymentMode: (editInvoice.paymentMode as PaymentMode) ?? "CREDIT",
 				placeOfSupply: editInvoice.placeOfSupply ?? "",
-				paymentDue: editInvoice.paymentDue?.slice(0, 10) ?? "",
+				dueDate: editInvoice.dueDate?.slice(0, 10) ?? "",
 				items:
 					editInvoice.items?.length > 0
 						? editInvoice.items.map((i) => ({
@@ -223,12 +221,11 @@ function InvoiceFormSheet({
 			});
 		} else {
 			form.reset({
-				reference: "",
 				date: new Date().toISOString().slice(0, 10),
 				contactId: "",
 				paymentMode: "CREDIT",
 				placeOfSupply: "",
-				paymentDue: "",
+				dueDate: "",
 				items: [
 					{ productId: "", qty: "1", rate: "", discount: "0", gstRate: "12" },
 				],
@@ -241,11 +238,6 @@ function InvoiceFormSheet({
 	}, [editInvoice, open]);
 
 	async function onSubmit(values: InvoiceFormValues) {
-		const ref = values.reference?.trim();
-		if (!ref) {
-			form.setError("reference", { message: "Required" });
-			return;
-		}
 		if (!values.contactId?.trim()) {
 			form.setError("contactId", { message: "Select a customer" });
 			return;
@@ -279,12 +271,13 @@ function InvoiceFormSheet({
 				await updateMut.mutateAsync({
 					id: editInvoice._id,
 					body: {
-						reference: ref,
 						date: values.date,
 						contactId: values.contactId,
 						paymentMode: values.paymentMode,
 						placeOfSupply: values.placeOfSupply,
-						paymentDue: values.paymentDue || undefined,
+						dueDate: values.dueDate
+							? new Date(values.dueDate).toISOString()
+							: undefined,
 						items,
 					},
 				});
@@ -297,13 +290,12 @@ function InvoiceFormSheet({
 		}
 
 		const body: CreateInvoiceBody = {
-			reference: ref,
 			date: new Date(values.date).toISOString(),
 			contactId: values.contactId,
 			paymentMode: values.paymentMode,
 			placeOfSupply: values.placeOfSupply,
-			paymentDue: values.paymentDue
-				? new Date(values.paymentDue).toISOString()
+			dueDate: values.dueDate
+				? new Date(values.dueDate).toISOString()
 				: undefined,
 			items,
 		};
@@ -320,7 +312,9 @@ function InvoiceFormSheet({
 			body.payment = {
 				amount: payAmount,
 				date: new Date(values.payDate).toISOString(),
-				reference: values.payReference.trim() || `PAY-${ref}`,
+				reference:
+					values.payReference.trim() ||
+					`PAY-INV-${new Date().toISOString().slice(0, 10)}`, // TODO: Generate reference
 				notes: values.payNotes.trim() || undefined,
 			};
 		}
@@ -361,23 +355,6 @@ function InvoiceFormSheet({
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="flex flex-col flex-1 min-h-0 overflow-hidden">
 						<div className="flex-1 min-h-0 overflow-y-auto px-4 space-y-4">
-							<FormField
-								control={form.control}
-								name="reference"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Reference</FormLabel>
-										<FormControl>
-											<Input
-												placeholder="INV-0001"
-												{...field}
-												disabled={isEdit}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
 							<div className="grid grid-cols-2 gap-4">
 								<FormField
 									control={form.control}
@@ -458,10 +435,10 @@ function InvoiceFormSheet({
 							/>
 							<FormField
 								control={form.control}
-								name="paymentDue"
+								name="dueDate"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Payment due (optional)</FormLabel>
+										<FormLabel>Due date (optional, for CREDIT)</FormLabel>
 										<FormControl>
 											<Input type="date" {...field} />
 										</FormControl>

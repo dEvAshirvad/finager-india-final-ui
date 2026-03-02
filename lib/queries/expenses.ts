@@ -65,7 +65,7 @@ export type CreateExpenseBody = {
 	receiptRef?: string;
 	attachmentUrl?: string;
 	placeOfSupply?: string;
-	paymentDue?: string;
+	paymentDue?: number;
 	narration?: string;
 };
 
@@ -136,7 +136,10 @@ export type ExpenseImportResponse = {
 // ──────────────────────────────────────────────
 
 function unwrap<T>(raw: unknown, key?: string): T {
-	const envelope = raw as { success?: boolean; data?: T | Record<string, unknown> };
+	const envelope = raw as {
+		success?: boolean;
+		data?: T | Record<string, unknown>;
+	};
 	if (envelope && typeof envelope === "object" && "data" in envelope) {
 		const inner = envelope.data;
 		if (key && inner && typeof inner === "object" && key in inner) {
@@ -170,13 +173,12 @@ async function listExpenses(
 		};
 		return {
 			data: r.data,
-			pagination:
-				r.pagination ?? {
-					page: params?.page ?? 1,
-					limit: params?.limit ?? 20,
-					total: r.data.length,
-					totalPages: 1,
-				},
+			pagination: r.pagination ?? {
+				page: params?.page ?? 1,
+				limit: params?.limit ?? 20,
+				total: r.data.length,
+				totalPages: 1,
+			},
 		};
 	}
 	const list = (unwrap<Expense[]>(data) ?? []) as Expense[];
@@ -246,18 +248,20 @@ async function importExpensesFromCsv(
 ): Promise<ExpenseImportResponse> {
 	const formData = new FormData();
 	formData.append("file", file);
-	const { data } = await api.post<ExpenseImportResponse>(`${BASE}/import`, formData, {
-		headers: { "Content-Type": "multipart/form-data" },
-	});
+	const { data } = await api.post<ExpenseImportResponse>(
+		`${BASE}/import`,
+		formData,
+		{
+			headers: { "Content-Type": "multipart/form-data" },
+		},
+	);
 	if (typeof data === "object" && data !== null && "data" in data) {
 		return (data as { data: ExpenseImportResponse }).data;
 	}
 	return data as ExpenseImportResponse;
 }
 
-async function exportExpensesJson(
-	params?: ListExpensesParams,
-): Promise<Blob> {
+async function exportExpensesJson(params?: ListExpensesParams): Promise<Blob> {
 	const { data } = await api.get<Blob>(`${BASE}/export/json`, {
 		params,
 		responseType: "blob",
@@ -265,9 +269,7 @@ async function exportExpensesJson(
 	return data;
 }
 
-async function exportExpensesCsv(
-	params?: ListExpensesParams,
-): Promise<Blob> {
+async function exportExpensesCsv(params?: ListExpensesParams): Promise<Blob> {
 	const { data } = await api.get<Blob>(`${BASE}/export/csv`, {
 		params,
 		responseType: "blob",
@@ -332,13 +334,8 @@ export function useUpdateExpense() {
 export function usePostExpense() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: ({
-			id,
-			body,
-		}: {
-			id: string;
-			body?: { orchid?: string };
-		}) => postExpense(id, body),
+		mutationFn: ({ id, body }: { id: string; body?: { orchid?: string } }) =>
+			postExpense(id, body),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: expenseKeys.all });
 		},
@@ -348,13 +345,8 @@ export function usePostExpense() {
 export function useRecordExpensePayment() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: ({
-			id,
-			body,
-		}: {
-			id: string;
-			body: RecordPaymentBody;
-		}) => recordPayment(id, body),
+		mutationFn: ({ id, body }: { id: string; body: RecordPaymentBody }) =>
+			recordPayment(id, body),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: expenseKeys.all });
 		},

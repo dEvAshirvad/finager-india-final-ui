@@ -424,15 +424,16 @@ function AccountFormDialog({
 // ──────────────────────────────────────────────
 
 function DetailPanel({
+	account,
 	accountId,
 	onEdit,
 	onClose,
 }: {
+	account: CoaTreeNode;
 	accountId: string;
 	onEdit: () => void;
 	onClose: () => void;
 }) {
-	const { data: account, isLoading: accountLoading } = useGetAccount(accountId);
 	const [jeParams, setJeParams] = useState<AccountJournalEntriesParams>({
 		page: 1,
 		limit: 10,
@@ -444,16 +445,6 @@ function DetailPanel({
 	const deleteMutation = useDeleteAccount();
 
 	const entries = jeData?.data?.entries;
-
-	if (accountLoading) {
-		return (
-			<div className="p-6 space-y-4">
-				<Skeleton className="h-6 w-48" />
-				<Skeleton className="h-4 w-32" />
-				<Skeleton className="h-20 w-full" />
-			</div>
-		);
-	}
 
 	if (!account) {
 		return (
@@ -832,8 +823,9 @@ export default function CoaPage() {
 				<div className="flex-1 flex flex-col min-w-0 bg-background">
 					{selectedId ? (
 						<DetailPanel
-							key={selectedId}
+							account={findInTree(treeArray, selectedId)!}
 							accountId={selectedId}
+							key={selectedId}
 							onEdit={handleEdit}
 							onClose={() => setSelectedId(null)}
 						/>

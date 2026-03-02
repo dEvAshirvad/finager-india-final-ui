@@ -267,16 +267,7 @@ async function listInstances(
 
 async function getInstance(id: string): Promise<EventInstance> {
 	const { data } = await api.get(`${BASE}/instances/${id}`);
-	// New envelope: { success, data: EventInstance }
-	if (
-		data &&
-		typeof data === "object" &&
-		"data" in data &&
-		(data as { data: unknown }).data != null
-	) {
-		return (data as { data: EventInstance }).data;
-	}
-	return unwrap<EventInstance>(data, "instance");
+	return data.data.event;
 }
 
 // ──────────────────────────────────────────────

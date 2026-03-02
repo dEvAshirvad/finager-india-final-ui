@@ -323,9 +323,7 @@ function ExpenseFormSheet({
 			receiptRef: values.receiptRef?.trim() || undefined,
 			attachmentUrl: values.attachmentUrl?.trim() || undefined,
 			placeOfSupply: values.placeOfSupply?.trim() || undefined,
-			paymentDue: values.paymentDue
-				? new Date(values.paymentDue).toISOString()
-				: undefined,
+			paymentDue: totalAmount,
 			narration: values.narration?.trim() || undefined,
 		};
 		if (items?.length) body.items = items;
@@ -1293,8 +1291,7 @@ export default function BillsPage() {
 																	</Button>
 																</>
 															)}
-															{(exp.status === "POSTED" ||
-																exp.status === "PARTIAL") && (
+															{exp.status === "PARTIAL" && (
 																<Button
 																	variant="ghost"
 																	size="icon"

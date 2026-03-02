@@ -29,6 +29,7 @@ export type InvoiceItem = {
 	lineTotal?: number;
 };
 
+/** paymentDue = amount due to complete payment (totalAmount − sum(payments)); dueDate = when payment is due (CREDIT). */
 export type Invoice = {
 	_id: string;
 	organizationId: string;
@@ -47,12 +48,16 @@ export type Invoice = {
 	placeOfSupply?: string;
 	autoPosting?: boolean;
 	narration?: string;
-	paymentDue?: string;
+	/** Amount due to complete payment (totalAmount − sum(payments)). */
+	paymentDue?: number;
+	/** When payment is due (for CREDIT). */
+	dueDate?: string;
 	paymentMode?: PaymentMode;
 	paymentTerms?: string;
 	items: InvoiceItem[];
 	discountTotal?: number;
 	totalCost?: number;
+	totalPaid?: number;
 	createdBy?: string;
 	updatedBy?: string;
 	createdAt?: string;
@@ -66,13 +71,14 @@ export type PaymentAtCreate = {
 	notes?: string;
 };
 
+/** Minimal create; server computes line totals, GST, invoice totals. CASH/ONLINE + payment → post and record payment in one request. */
 export type CreateInvoiceBody = {
-	reference: string;
 	date: string;
 	contactId: string;
 	paymentMode: PaymentMode;
 	placeOfSupply: string;
-	paymentDue?: string;
+	/** When payment is due (for CREDIT). Optional; can default from contact. */
+	dueDate?: string;
 	items: Array<{
 		productId?: string;
 		qty: number;
@@ -82,8 +88,8 @@ export type CreateInvoiceBody = {
 		name?: string;
 		hsnOrSacCode?: string;
 	}>;
+	/** For CASH/ONLINE: post + record full payment in one request. */
 	payment?: PaymentAtCreate;
-	dueDate?: string;
 	paymentTerms?: string;
 	narration?: string;
 };
@@ -94,7 +100,6 @@ export type UpdateInvoiceBody = Partial<{
 	contactId: string;
 	paymentMode: PaymentMode;
 	placeOfSupply: string;
-	paymentDue: string;
 	items: InvoiceItem[];
 	dueDate: string;
 	paymentTerms: string;
@@ -151,7 +156,10 @@ export type InvoiceImportResponse = {
 // ──────────────────────────────────────────────
 
 function unwrap<T>(raw: unknown, key?: string): T {
-	const envelope = raw as { success?: boolean; data?: T | Record<string, unknown> };
+	const envelope = raw as {
+		success?: boolean;
+		data?: T | Record<string, unknown>;
+	};
 	if (envelope && typeof envelope === "object" && "data" in envelope) {
 		const inner = envelope.data;
 		if (key && inner && typeof inner === "object" && key in inner) {
@@ -185,13 +193,12 @@ async function listInvoices(
 		};
 		return {
 			data: r.data,
-			pagination:
-				r.pagination ?? {
-					page: params?.page ?? 1,
-					limit: params?.limit ?? 20,
-					total: r.data.length,
-					totalPages: 1,
-				},
+			pagination: r.pagination ?? {
+				page: params?.page ?? 1,
+				limit: params?.limit ?? 20,
+				total: r.data.length,
+				totalPages: 1,
+			},
 		};
 	}
 	const list = (unwrap<Invoice[]>(data) ?? []) as Invoice[];
@@ -216,7 +223,10 @@ async function createInvoice(body: CreateInvoiceBody): Promise<Invoice> {
 	return unwrap<Invoice>(data, "invoice");
 }
 
-async function updateInvoice(id: string, body: UpdateInvoiceBody): Promise<Invoice> {
+async function updateInvoice(
+	id: string,
+	body: UpdateInvoiceBody,
+): Promise<Invoice> {
 	const { data } = await api.patch(`${BASE}/${id}`, body);
 	return unwrap<Invoice>(data, "invoice");
 }
@@ -253,21 +263,25 @@ async function downloadInvoiceTemplate(): Promise<void> {
 	URL.revokeObjectURL(url);
 }
 
-async function importInvoicesFromCsv(file: File): Promise<InvoiceImportResponse> {
+async function importInvoicesFromCsv(
+	file: File,
+): Promise<InvoiceImportResponse> {
 	const formData = new FormData();
 	formData.append("file", file);
-	const { data } = await api.post<InvoiceImportResponse>(`${BASE}/import`, formData, {
-		headers: { "Content-Type": "multipart/form-data" },
-	});
+	const { data } = await api.post<InvoiceImportResponse>(
+		`${BASE}/import`,
+		formData,
+		{
+			headers: { "Content-Type": "multipart/form-data" },
+		},
+	);
 	if (typeof data === "object" && data !== null && "data" in data) {
 		return (data as { data: InvoiceImportResponse }).data;
 	}
 	return data as InvoiceImportResponse;
 }
 
-async function exportInvoicesJson(
-	params?: ListInvoicesParams,
-): Promise<Blob> {
+async function exportInvoicesJson(params?: ListInvoicesParams): Promise<Blob> {
 	const { data } = await api.get<Blob>(`${BASE}/export/json`, {
 		params,
 		responseType: "blob",
@@ -275,9 +289,7 @@ async function exportInvoicesJson(
 	return data;
 }
 
-async function exportInvoicesCsv(
-	params?: ListInvoicesParams,
-): Promise<Blob> {
+async function exportInvoicesCsv(params?: ListInvoicesParams): Promise<Blob> {
 	const { data } = await api.get<Blob>(`${BASE}/export/csv`, {
 		params,
 		responseType: "blob",
@@ -342,13 +354,8 @@ export function useUpdateInvoice() {
 export function usePostInvoice() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: ({
-			id,
-			body,
-		}: {
-			id: string;
-			body?: { orchid?: string };
-		}) => postInvoice(id, body),
+		mutationFn: ({ id, body }: { id: string; body?: { orchid?: string } }) =>
+			postInvoice(id, body),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: invoiceKeys.all });
 		},
@@ -358,13 +365,8 @@ export function usePostInvoice() {
 export function useRecordPayment() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: ({
-			id,
-			body,
-		}: {
-			id: string;
-			body: RecordPaymentBody;
-		}) => recordPayment(id, body),
+		mutationFn: ({ id, body }: { id: string; body: RecordPaymentBody }) =>
+			recordPayment(id, body),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: invoiceKeys.all });
 		},

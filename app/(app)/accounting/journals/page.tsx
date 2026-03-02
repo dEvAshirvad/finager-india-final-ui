@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -805,6 +805,8 @@ function ImportJournalsDialog({
 	);
 }
 
+const SEARCH_DEBOUNCE_MS = 400;
+
 // ──────────────────────────────────────────────
 // Main Page
 // ──────────────────────────────────────────────
@@ -818,18 +820,27 @@ export default function JournalsPage() {
 	});
 	const [statusFilter, setStatusFilter] = useState<string>("all");
 	const [searchRef, setSearchRef] = useState("");
+	const [debouncedSearchRef, setDebouncedSearchRef] = useState("");
 	const [createOpen, setCreateOpen] = useState(false);
 	const [importOpen, setImportOpen] = useState(false);
 	const [editEntry, setEditEntry] = useState<JournalEntry | null>(null);
 	const [viewId, setViewId] = useState<string | null>(null);
 	const [selected, setSelected] = useState<Set<string>>(new Set());
 
+	useEffect(() => {
+		const t = setTimeout(() => {
+			setDebouncedSearchRef(searchRef);
+			setParams((p) => ({ ...p, page: 1 }));
+		}, SEARCH_DEBOUNCE_MS);
+		return () => clearTimeout(t);
+	}, [searchRef]);
+
 	const queryParams = useMemo<ListJournalParams>(() => {
 		const p = { ...params };
 		if (statusFilter !== "all") p.status = statusFilter as JournalStatus;
-		if (searchRef.trim()) p.reference = searchRef.trim();
+		if (debouncedSearchRef.trim()) p.reference = debouncedSearchRef.trim();
 		return p;
-	}, [params, statusFilter, searchRef]);
+	}, [params, statusFilter, debouncedSearchRef]);
 
 	const { data: journalData, isLoading } = useListJournals(queryParams);
 	const { data: accountData } = useListAccounts({ limit: 500 });
@@ -925,10 +936,7 @@ export default function JournalsPage() {
 								placeholder="Search by reference..."
 								className="h-8 pl-8 w-56 text-xs"
 								value={searchRef}
-								onChange={(e) => {
-									setSearchRef(e.target.value);
-									setParams((p) => ({ ...p, page: 1 }));
-								}}
+								onChange={(e) => setSearchRef(e.target.value)}
 							/>
 						</div>
 						<Select
